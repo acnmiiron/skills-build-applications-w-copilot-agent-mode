@@ -1,5 +1,6 @@
 import express from 'express';
 import type { ErrorRequestHandler } from 'express';
+import cors from 'cors';
 import { connectDatabase } from './config/database.js';
 import apiRouter from './routes/index.js';
 
@@ -10,7 +11,10 @@ const apiBaseUrl = codespaceName
 
 const app = express();
 const port = Number(process.env.PORT) || 8000;
+const frontendOrigins = ['http://localhost:5173'];
+if (codespaceName) frontendOrigins.push(`https://${codespaceName}-5173.app.github.dev`);
 
+app.use(cors({ origin: frontendOrigins }));
 app.use(express.json());
 app.use('/api', apiRouter);
 
